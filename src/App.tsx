@@ -1,5 +1,7 @@
 import { useCallback, useMemo, useState } from "react";
 
+const eliminateSpace = (str: string) => str.replace(/\s*$/, "");
+
 export const App = () => {
   const [input, setInput] = useState("");
   const onChange = useCallback<React.ChangeEventHandler<HTMLTextAreaElement>>(
@@ -11,12 +13,12 @@ export const App = () => {
   const output = useMemo(() => {
     return input.split("\n").reduce((prev, curr) => {
       if (prev.length === 0) {
-        return curr;
+        return eliminateSpace(curr);
       }
       if (prev.match(/\-\s*$/)) {
         return `${prev.replace(/\-\s*$/, "")}${curr}`;
       }
-      return `${prev} ${curr.replace(/\s*$/, "")}`;
+      return `${prev} ${eliminateSpace(curr)}`;
     }, "");
   }, [input]);
   const onClick = useCallback<React.MouseEventHandler<HTMLTextAreaElement>>(
@@ -43,6 +45,7 @@ export const App = () => {
           rows={10}
           value={output}
           onClick={onClick}
+          readOnly
         ></textarea>
       </div>
     </div>
