@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from "react";
+import { useCallback, useMemo, useRef, useState } from "react";
 
 const eliminateSpace = (str: string) => str.replace(/\s*$/, "");
 
@@ -27,6 +27,11 @@ export const App = () => {
     },
     []
   );
+  const ref = useRef<HTMLTextAreaElement>(null);
+  const copy = useCallback(() => {
+    ref.current?.select();
+    document.execCommand("copy");
+  }, []);
   return (
     <div className="w-full">
       <div className="w-full p-4">
@@ -38,6 +43,14 @@ export const App = () => {
           rows={10}
         ></textarea>
       </div>
+      <div className="flex p-4">
+        <button
+          className="block w-4/12 border border-solid border-red-400 rounded py-4"
+          onClick={copy}
+        >
+          copy
+        </button>
+      </div>
       <div className="w-full p-4">
         <textarea
           className="w-full border border-solid border-gray-500 rounded p-2"
@@ -46,6 +59,7 @@ export const App = () => {
           value={output}
           onClick={onClick}
           readOnly
+          ref={ref}
         ></textarea>
       </div>
     </div>
