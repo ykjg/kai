@@ -1,9 +1,11 @@
 import { useCallback, useMemo, useRef, useState } from "react";
+import { remove } from "remove-accents";
 
 const eliminateSpace = (str: string) => str.replace(/\s*$/, "");
 
 export const App = () => {
   const [input, setInput] = useState("");
+  const [isRemoveAccent, setIsRemoveAccent] = useState(false);
   const onChange = useCallback<React.ChangeEventHandler<HTMLTextAreaElement>>(
     (event) => {
       setInput(event.target.value);
@@ -20,7 +22,10 @@ export const App = () => {
       }
       return `${prev} ${eliminateSpace(curr)}`;
     }, "");
-  }, [input]);
+  }, [input, isRemoveAccent]);
+  const accentRemoved = useMemo(() => {
+    return remove(output);
+  }, [output]);
   const onClick = useCallback<React.MouseEventHandler<HTMLTextAreaElement>>(
     (event) => {
       event.currentTarget.select();
@@ -52,6 +57,15 @@ export const App = () => {
           placeholder="input here"
           rows={10}
         ></textarea>
+        <label className="text-base">
+          <input
+            type="checkbox"
+            className="mr-1 transform scale-150"
+            onChange={(event) => setIsRemoveAccent(event.currentTarget.checked)}
+            checked={isRemoveAccent}
+          ></input>
+          Remove accent
+        </label>
       </div>
       <div className="flex p-4">
         <a
@@ -82,7 +96,7 @@ export const App = () => {
           className="w-full border border-solid border-gray-500 rounded p-2"
           placeholder="output here"
           rows={10}
-          value={output}
+          value={isRemoveAccent ? accentRemoved : output}
           onClick={onClick}
           readOnly
           ref={ref}
