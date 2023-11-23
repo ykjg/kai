@@ -26,12 +26,6 @@ export const App = () => {
   const accentRemoved = useMemo(() => {
     return remove(output);
   }, [output]);
-  const onClick = useCallback<React.MouseEventHandler<HTMLTextAreaElement>>(
-    (event) => {
-      event.currentTarget.select();
-    },
-    []
-  );
   const ref = useRef<HTMLTextAreaElement>(null);
   const copy = useCallback(() => {
     ref.current?.select();
@@ -97,7 +91,6 @@ export const App = () => {
           placeholder="output here"
           rows={10}
           value={isRemoveAccent ? accentRemoved : output}
-          onClick={onClick}
           readOnly
           ref={ref}
         ></textarea>
